@@ -7,10 +7,10 @@ export default function Footer() {
       <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <Link to="/" className="font-semibold">
-            ExamFlow
+            Examily
           </Link>
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} ExamFlow. All rights reserved.
+            &copy; {new Date().getFullYear()} Examily. All rights reserved.
           </p>
         </div>
         <div className="flex items-center gap-4">

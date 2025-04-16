@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Layout from '@/components/layout/Layout';
-import { PlusCircle, Search, MoreVertical, Copy, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Search, MoreVertical, Copy, Edit, Trash2, Eye } from 'lucide-react';
 import { getCurrentUser, getExams, getExamAttemptsByExam, deleteExam, Exam } from '@/utils/localStorage';
 import { toast } from '@/components/ui/use-toast';
 
@@ -131,7 +131,10 @@ const TeacherExamsList = () => {
                       <div className="hidden md:block">{exam.timeLimit} min</div>
                       <div className="flex md:justify-end items-center gap-2 mt-2 md:mt-0">
                         <Button variant="outline" asChild>
-                          <Link to={`/teacher/exams/${exam.id}`}>View</Link>
+                          <Link to={`/teacher/exams/preview/${exam.id}`}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View
+                          </Link>
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -145,7 +148,7 @@ const TeacherExamsList = () => {
                               Copy Code
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link to={`/teacher/exams/${exam.id}/edit`}>
+                              <Link to={`/teacher/exams/edit/${exam.id}`}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Exam
                               </Link>

@@ -41,7 +41,7 @@ export default function Header() {
           )}
           <Link to="/" className="flex items-center gap-2">
             <span className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-700">
-              ExamFlow
+              Examily
             </span>
           </Link>
         </div>
