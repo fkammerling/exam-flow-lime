@@ -1,41 +1,31 @@
-
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { getCurrentUser, getExamAttemptsByStudent, getExams, getExam, ExamAttempt, Exam } from '@/utils/localStorage';
+import { fetchExams } from '@/api';
 import { toast } from '@/components/ui/use-toast';
 
 interface ExamWithAttempt {
-  exam: Exam;
-  attempt?: ExamAttempt;
+  exam: any;
+  attempt?: any;
 }
 
 const StudentExams = () => {
   const [examList, setExamList] = useState<ExamWithAttempt[]>([]);
-  const currentUser = getCurrentUser();
 
   useEffect(() => {
-    if (currentUser?.id) {
-      // Get all available exams based on the student's attempts
-      const attempts = getExamAttemptsByStudent(currentUser.id);
-      
-      // Create a map of exam IDs to avoid duplicates
-      const examMap = new Map<string, ExamWithAttempt>();
-      
-      // Process attempts first
-      attempts.forEach(attempt => {
-        const exam = getExam(attempt.examId);
-        if (exam) {
-          examMap.set(exam.id, { exam, attempt });
-        }
+    // Fetch exams from backend
+    fetchExams()
+      .then(data => {
+        // Adapt as needed: here we assume backend returns array of exams
+        setExamList(data.map((exam: any) => ({ exam })));
+      })
+      .catch(() => {
+        setExamList([]);
+        toast({ title: 'Error', description: 'Failed to load exams', variant: 'destructive' });
       });
-      
-      // Convert the map to an array for rendering
-      setExamList(Array.from(examMap.values()));
-    }
-  }, [currentUser?.id]);
+  }, []);
 
   return (
     <Layout>
