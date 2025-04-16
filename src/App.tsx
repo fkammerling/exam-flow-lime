@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +13,8 @@ import TeacherDashboard from "./pages/teacher/Dashboard";
 import TeacherExamsList from "./pages/teacher/ExamsList";
 import TeacherProfile from "./pages/teacher/Profile";
 import CreateExam from "./pages/teacher/CreateExam";
+import EditExam from "./pages/teacher/EditExam";
+import PreviewExam from "./pages/teacher/PreviewExam";
 
 // Student Routes
 import StudentLogin from "./pages/student/Login";
@@ -37,6 +40,8 @@ const App = () => (
           <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
           <Route path="/teacher/exams" element={<TeacherExamsList />} />
           <Route path="/teacher/exams/create" element={<CreateExam />} />
+          <Route path="/teacher/exams/edit/:examId" element={<EditExam />} />
+          <Route path="/teacher/exams/preview/:examId" element={<PreviewExam />} />
           <Route path="/teacher/profile" element={<TeacherProfile />} />
           
           {/* Student Routes */}

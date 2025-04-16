@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { getCurrentUser, getExamAttemptsByStudent, getExam, ExamAttempt, Exam } from '@/utils/localStorage';
+import { getCurrentUser, getExamAttemptsByStudent, getExams, getExam, ExamAttempt, Exam } from '@/utils/localStorage';
+import { toast } from '@/components/ui/use-toast';
 
 interface ExamWithAttempt {
   exam: Exam;
@@ -17,12 +18,22 @@ const StudentExams = () => {
 
   useEffect(() => {
     if (currentUser?.id) {
+      // Get all available exams based on the student's attempts
       const attempts = getExamAttemptsByStudent(currentUser.id);
-      const examsWithAttempts = attempts.map(attempt => ({
-        exam: getExam(attempt.examId)!,
-        attempt: attempt
-      }));
-      setExamList(examsWithAttempts);
+      
+      // Create a map of exam IDs to avoid duplicates
+      const examMap = new Map<string, ExamWithAttempt>();
+      
+      // Process attempts first
+      attempts.forEach(attempt => {
+        const exam = getExam(attempt.examId);
+        if (exam) {
+          examMap.set(exam.id, { exam, attempt });
+        }
+      });
+      
+      // Convert the map to an array for rendering
+      setExamList(Array.from(examMap.values()));
     }
   }, [currentUser?.id]);
 
@@ -60,8 +71,8 @@ const StudentExams = () => {
                       variant={attempt?.completed ? "outline" : "default"}
                       asChild
                     >
-                      <Link to={attempt ? `/student/results/${attempt.id}` : `/student/exams/${exam.id}`}>
-                        {attempt?.completed ? "View Results" : (attempt ? "Continue" : "Start")}
+                      <Link to={attempt?.completed ? `/student/results/${attempt.id}` : `/student/exams/${exam.id}`}>
+                        {attempt?.completed ? "View Results" : "Start"}
                       </Link>
                     </Button>
                   </div>
