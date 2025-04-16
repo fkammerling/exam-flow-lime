@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
-import { Radio } from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -69,8 +69,8 @@ const PreviewExam = () => {
           <div className="space-y-3">
             {question.options?.map((option, index) => (
               <div key={index} className="flex items-center space-x-2">
-                <Radio disabled />
-                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <RadioGroupItem value={option} disabled id={`option-${index}`} />
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor={`option-${index}`}>
                   {option}
                 </label>
               </div>
@@ -82,14 +82,14 @@ const PreviewExam = () => {
         return (
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <Radio disabled />
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <RadioGroupItem value="true" disabled id="true" />
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="true">
                 True
               </label>
             </div>
             <div className="flex items-center space-x-2">
-              <Radio disabled />
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <RadioGroupItem value="false" disabled id="false" />
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="false">
                 False
               </label>
             </div>
@@ -213,7 +213,9 @@ const PreviewExam = () => {
                   </div>
                 )}
 
-                {renderQuestionContent(currentQuestion)}
+                <RadioGroup value="" disabled>
+                  {renderQuestionContent(currentQuestion)}
+                </RadioGroup>
 
                 <Separator className="my-6" />
 
