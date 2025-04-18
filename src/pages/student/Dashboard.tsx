@@ -111,15 +111,6 @@ const StudentDashboard = () => {
               )}
             </p>
           </div>
-          <button
-            className="mt-4 md:mt-0 text-sm text-lime-700 underline hover:text-lime-900"
-            onClick={() => {
-              localStorage.removeItem('token');
-              window.location.href = '/student/login';
-            }}
-          >
-            Logout
-          </button>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/components/layout/Layout';
-import { BookOpen, UserCog } from 'lucide-react';
+import { BookOpen, UserCog, Clock, BarChart2 } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -10,7 +10,7 @@ const Index = () => {
       <div className="container max-w-6xl mx-auto px-4 py-12 md:py-20">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-600">ExamFlow</span>
+            Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-600">Examily</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             A modern platform for creating, taking, and analyzing exams with ease.
@@ -58,29 +58,47 @@ const Index = () => {
         <div className="mt-16 max-w-4xl mx-auto">
           <h2 className="text-2xl font-semibold text-center mb-8">Key Features</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-lime-50 flex items-center justify-center mb-3">
+                <BookOpen className="h-7 w-7 text-lime-600" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Multiple Question Types</h3>
-              <p className="text-muted-foreground">Create diverse exams with various question formats</p>
+              <p className="text-muted-foreground text-center">Create diverse exams with various question formats</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-lime-50 flex items-center justify-center mb-3">
+                <Clock className="h-7 w-7 text-lime-600" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Timed Assessments</h3>
-              <p className="text-muted-foreground">Set time limits to simulate real exam conditions</p>
+              <p className="text-muted-foreground text-center">Set time limits to simulate real exam conditions</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-lime-50 flex items-center justify-center mb-3">
+                <BarChart2 className="h-7 w-7 text-lime-600" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Performance Analytics</h3>
-              <p className="text-muted-foreground">Gain insights from detailed assessment reports</p>
+              <p className="text-muted-foreground text-center">Gain insights from detailed assessment reports</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-lime-50 flex items-center justify-center mb-3">
+                <BookOpen className="h-7 w-7 text-lime-600" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Course Code System</h3>
-              <p className="text-muted-foreground">Easily distribute exams without complex permission systems</p>
+              <p className="text-muted-foreground text-center">Easily distribute exams without complex permission systems</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-lime-50 flex items-center justify-center mb-3">
+                <Clock className="h-7 w-7 text-lime-600" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Progress Saving</h3>
-              <p className="text-muted-foreground">Pick up where you left off with auto-save functionality</p>
+              <p className="text-muted-foreground text-center">Pick up where you left off with auto-save functionality</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-lime-50 flex items-center justify-center mb-3">
+                <BarChart2 className="h-7 w-7 text-lime-600" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Responsive Design</h3>
-              <p className="text-muted-foreground">Take or create exams on any device, anywhere</p>
+              <p className="text-muted-foreground text-center">Take or create exams on any device, anywhere</p>
             </div>
           </div>
         </div>

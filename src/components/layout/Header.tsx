@@ -41,7 +41,7 @@ export default function Header() {
         <div className="flex items-center gap-2 w-full justify-between">
           <div className="flex items-center gap-2">
             {/* Remove back arrow on dashboard */}
-            {(!isLanding && currentUser && !location.pathname.includes('/dashboard')) && (
+            {(!isLanding && currentUser && !(location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student'))) && (
               <Button variant="ghost" size="icon" onClick={goBack} className="mr-2">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
@@ -73,16 +73,16 @@ export default function Header() {
               </Button>
             )
           )}
-          {/* Hamburger menu only on dashboard */}
-          {currentUser && location.pathname.includes('/dashboard') && (
-            <Button variant="ghost" size="icon" onClick={toggleMenu}>
+          {/* Hamburger menu only on teacher/student pages */}
+          {currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && (
+            <Button variant="ghost" size="icon" onClick={toggleMenu} className="md:hidden">
               <Menu className="h-6 w-6" />
             </Button>
           )}
         </div>
 
-        {/* Hamburger menu content for dashboard */}
-        {currentUser && location.pathname.includes('/dashboard') && isMenuOpen && (
+        {/* Hamburger menu content for teacher/student pages */}
+        {currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && isMenuOpen && (
           <div className="fixed inset-0 top-16 z-50 bg-background flex flex-col items-end md:hidden">
             <nav className="w-48 bg-white border shadow-lg rounded-l-lg mt-2 mr-2 p-4 flex flex-col gap-4">
               {currentUser.role === 'teacher' ? (
@@ -100,7 +100,55 @@ export default function Header() {
           </div>
         )}
 
-        {!isLanding && !location.pathname.includes('/dashboard') && (
+        {/* Desktop navigation on teacher/student pages: Dashboard, Old Exams, My Profile, Log Out */}
+        {currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && (
+          <div className="hidden md:flex items-center gap-4">
+            <Button
+              className={`px-6 py-2 rounded-md text-sm font-semibold ${location.pathname === (currentUser.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard') ? 'bg-lime-600 hover:bg-lime-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}
+              onClick={() => {
+                if (currentUser.role === 'teacher') {
+                  navigate('/teacher/dashboard');
+                } else {
+                  navigate('/student/dashboard');
+                }
+              }}
+            >
+              Dashboard
+            </Button>
+            <Button
+              className={`px-6 py-2 rounded-md text-sm font-semibold ${location.pathname === (currentUser.role === 'teacher' ? '/teacher/exams' : '/student/exams') ? 'bg-lime-600 hover:bg-lime-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}
+              onClick={() => {
+                if (currentUser.role === 'teacher') {
+                  navigate('/teacher/exams');
+                } else {
+                  navigate('/student/exams');
+                }
+              }}
+            >
+              Old Exams
+            </Button>
+            <Button
+              className={`px-6 py-2 rounded-md text-sm font-semibold ${location.pathname === (currentUser.role === 'teacher' ? '/teacher/profile' : '/student/profile') ? 'bg-lime-600 hover:bg-lime-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}
+              onClick={() => {
+                if (currentUser.role === 'teacher') {
+                  navigate('/teacher/profile');
+                } else {
+                  navigate('/student/profile');
+                }
+              }}
+            >
+              My Profile
+            </Button>
+            <Button
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold"
+              onClick={handleLogout}
+            >
+              Log Out
+            </Button>
+          </div>
+        )}
+
+        {!isLanding && !(location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && (
           <div className="flex items-center gap-4">
             {currentUser && currentUser.role === 'teacher' && (
               <Button
@@ -125,7 +173,7 @@ export default function Header() {
           </div>
         )}
 
-        {!isLanding && !location.pathname.includes('/dashboard') && (
+        {!isLanding && !(location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && (
           <>
             {/* Desktop navigation */}
             <nav className="hidden md:flex items-center gap-6">
