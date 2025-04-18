@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,6 @@ import {
 import Layout from '@/components/layout/Layout';
 import { 
   getCurrentUser, 
-  getExam, 
   generateId, 
   saveExamAttempt, 
   getExamAttempt,
@@ -34,6 +32,7 @@ import {
   ExamAttempt
 } from '@/utils/localStorage';
 import { toast } from '@/components/ui/use-toast';
+import { fetchExams } from '@/api';
 
 const TakeExam = () => {
   const { examId } = useParams<{ examId: string }>();
@@ -55,48 +54,30 @@ const TakeExam = () => {
       return;
     }
 
-    const examData = getExam(examId);
-    
-    if (!examData) {
-      toast({
-        title: 'Exam not found',
-        description: 'The exam you are trying to access does not exist.',
-        variant: 'destructive',
+    fetchExams()
+      .then((exams) => {
+        const examData = exams.find((e: any) => e.id === examId);
+        if (!examData) {
+          toast({
+            title: 'Exam not found',
+            description: 'The exam you are trying to access does not exist.',
+            variant: 'destructive',
+          });
+          navigate('/student/dashboard');
+          return;
+        }
+        setExam(examData);
+        setTimeRemaining(prev => prev === 0 ? (examData.time_limit * 60 || 0) : prev);
+        setLoading(false);
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to load exam from server.',
+          variant: 'destructive',
+        });
+        navigate('/student/dashboard');
       });
-      navigate('/student/dashboard');
-      return;
-    }
-    
-    setExam(examData);
-    
-    // Check for existing attempt
-    const existingAttempts = getExamAttempt(examId);
-    if (existingAttempts) {
-      setAttempt(existingAttempts);
-      setAnswers(existingAttempts.answers);
-      
-      // Calculate remaining time
-      if (!existingAttempts.completed) {
-        const elapsed = Math.floor((Date.now() - existingAttempts.startedAt) / 1000);
-        const remaining = Math.max(0, examData.timeLimit * 60 - elapsed);
-        setTimeRemaining(remaining);
-      }
-    } else {
-      // Create new attempt
-      const newAttempt = {
-        id: generateId(),
-        examId: examId,
-        studentId: currentUser.id,
-        answers: {},
-        startedAt: Date.now(),
-        completed: false,
-      };
-      saveExamAttempt(newAttempt);
-      setAttempt(newAttempt);
-      setTimeRemaining(examData.timeLimit * 60);
-    }
-    
-    setLoading(false);
   }, [examId, currentUser, navigate]);
 
   useEffect(() => {
@@ -106,11 +87,17 @@ const TakeExam = () => {
     }
 
     const timer = setInterval(() => {
-      setTimeRemaining(prev => prev - 1);
+      setTimeRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeRemaining, attempt]);
+  }, [loading]);
 
   useEffect(() => {
     // Save progress every 30 seconds

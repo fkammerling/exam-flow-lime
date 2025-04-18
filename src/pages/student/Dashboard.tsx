@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
@@ -19,6 +18,7 @@ import Layout from '@/components/layout/Layout';
 import { Clock, BookOpen, CheckCircle2 } from 'lucide-react';
 import { getCurrentUser, getExamAttempts, getExamsByCourseCode, Exam, ExamAttempt } from '@/utils/localStorage';
 import { toast } from '@/components/ui/use-toast';
+import { fetchMe } from '@/api';
 
 const formSchema = z.object({
   courseCode: z.string().min(4, {
@@ -29,18 +29,23 @@ const formSchema = z.object({
 const StudentDashboard = () => {
   const [attempts, setAttempts] = useState<ExamAttempt[]>([]);
   const [exams, setExams] = useState<Exam[]>([]);
-  const currentUser = getCurrentUser();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      courseCode: '',
-    },
-  });
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    if (currentUser?.id) {
-      const studentAttempts = getExamAttempts().filter(attempt => attempt.studentId === currentUser.id);
+    async function getUser() {
+      try {
+        const me = await fetchMe();
+        setUser(me);
+      } catch {
+        setUser(null);
+      }
+    }
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      const studentAttempts = getExamAttempts().filter(attempt => attempt.studentId === user.id);
       setAttempts(studentAttempts);
       
       // Get all exams for the attempts
@@ -49,7 +54,14 @@ const StudentDashboard = () => {
       const filteredExams = allExams.filter(exam => examIds.has(exam.id));
       setExams(filteredExams);
     }
-  }, [currentUser?.id]);
+  }, [user?.id]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      courseCode: '',
+    },
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const foundExams = getExamsByCourseCode(values.courseCode);
@@ -90,9 +102,24 @@ const StudentDashboard = () => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Student Dashboard</h1>
             <p className="text-muted-foreground mt-1">
-              Welcome back, {currentUser?.name}
+              {user ? (
+                <>
+                  Welcome back, {user.name} <span className="ml-2 text-xs text-lime-700 bg-lime-50 rounded px-2 py-1">{user.program}</span>
+                </>
+              ) : (
+                'Welcome!'
+              )}
             </p>
           </div>
+          <button
+            className="mt-4 md:mt-0 text-sm text-lime-700 underline hover:text-lime-900"
+            onClick={() => {
+              localStorage.removeItem('token');
+              window.location.href = '/student/login';
+            }}
+          >
+            Logout
+          </button>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">

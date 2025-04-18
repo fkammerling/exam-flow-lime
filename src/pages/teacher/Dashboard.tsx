@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,15 +5,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Layout from '@/components/layout/Layout';
 import { PlusCircle, BookOpen, Users, BarChart } from 'lucide-react';
 import { getCurrentUser, getExams, getExamAttempts, Exam, ExamAttempt } from '@/utils/localStorage';
+import { fetchMe } from '@/api';
 
 const TeacherDashboard = () => {
   const [exams, setExams] = useState<Exam[]>([]);
   const [attempts, setAttempts] = useState<ExamAttempt[]>([]);
-  const currentUser = getCurrentUser();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    if (currentUser?.id) {
-      const teacherExams = getExams().filter(exam => exam.createdBy === currentUser.id);
+    async function getUser() {
+      try {
+        const me = await fetchMe();
+        setUser(me);
+      } catch {
+        setUser(null);
+      }
+    }
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      const teacherExams = getExams().filter(exam => exam.createdBy === user.id);
       setExams(teacherExams);
       
       const examIds = teacherExams.map(exam => exam.id);
@@ -23,7 +35,7 @@ const TeacherDashboard = () => {
       );
       setAttempts(examAttempts);
     }
-  }, [currentUser?.id]);
+  }, [user?.id]);
 
   const completedAttempts = attempts.filter(attempt => attempt.completed);
   const averageScore = completedAttempts.length > 0
@@ -37,15 +49,15 @@ const TeacherDashboard = () => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Teacher Dashboard</h1>
             <p className="text-muted-foreground mt-1">
-              Welcome back, {currentUser?.name}
+              {user ? (
+                <>
+                  Welcome back, {user.name} <span className="ml-2 text-xs text-lime-700 bg-lime-50 rounded px-2 py-1">{user.subject}</span>
+                </>
+              ) : (
+                'Welcome!'
+              )}
             </p>
           </div>
-          <Button asChild className="mt-4 md:mt-0 bg-lime-600 hover:bg-lime-700">
-            <Link to="/teacher/exams/create">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create New Exam
-            </Link>
-          </Button>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-8">

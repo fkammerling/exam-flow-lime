@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,7 +31,7 @@ const Index = () => {
                 Create, edit, and analyze exams. View student performance and track progress.
               </p>
               <Button asChild className="w-full bg-lime-600 hover:bg-lime-700">
-                <Link to="/teacher/login">Enter as Teacher</Link>
+                <Link to="/register">Get Started</Link>
               </Button>
             </CardContent>
           </Card>
@@ -50,7 +49,7 @@ const Index = () => {
                 Access your assigned exams using course codes. Take exams and review your results.
               </p>
               <Button asChild className="w-full bg-lime-600 hover:bg-lime-700">
-                <Link to="/student/login">Enter as Student</Link>
+                <Link to="/register">Get Started</Link>
               </Button>
             </CardContent>
           </Card>
