@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -36,45 +35,43 @@ const StudentProfile = () => {
   if (!profile) return null;
 
   return (
-    <Layout>
-      <div className="container py-8">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold tracking-tight mb-8">Profile Settings</h1>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>
-                Update your profile information
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={profile.name}
-                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="program">Program</Label>
-                  <Input
-                    id="program"
-                    value={profile.program || ''}
-                    onChange={(e) => setProfile({ ...profile, program: e.target.value })}
-                  />
-                </div>
-                <Button type="submit" className="bg-lime-600 hover:bg-lime-700">
-                  Save Changes
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+    <div className="container py-8">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-3xl font-bold tracking-tight mb-8">Profile Settings</h1>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>
+              Update your profile information
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={profile.name}
+                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="program">Program</Label>
+                <Input
+                  id="program"
+                  value={profile.program || ''}
+                  onChange={(e) => setProfile({ ...profile, program: e.target.value })}
+                />
+              </div>
+              <Button type="submit" className="bg-lime-600 hover:bg-lime-700">
+                Save Changes
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
-    </Layout>
+    </div>
   );
 };
 

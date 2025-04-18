@@ -10,6 +10,11 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isLanding = location.pathname === '/';
+  const isTeacherDash = location.pathname.startsWith('/teacher/dashboard');
+  const isStudentDash = location.pathname.startsWith('/student/dashboard');
+  const isLogin = location.pathname.includes('/login');
+  const isRegister = location.pathname.includes('/register');
+  const isAuthPage = location.pathname.includes('/login') || location.pathname.includes('/register');
 
   useEffect(() => {
     const handleStorage = () => {
@@ -20,11 +25,12 @@ export default function Header() {
     return () => window.removeEventListener('storage', handleStorage);
   }, [location]);
 
+  // On logout, navigate to root
   const handleLogout = () => {
     setCurrentUser(null);
     setUser(null);
-    navigate('/');
     setIsMenuOpen(false);
+    navigate('/');
   };
 
   const toggleMenu = () => {
@@ -34,6 +40,65 @@ export default function Header() {
   const goBack = () => {
     navigate(-1);
   };
+
+  // If on login or register path, show ONLY the logo (no tabs, no nav, nothing else)
+  if (location.pathname.includes('/login') || location.pathname.includes('/register')) {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center">
+          <div className="flex items-center gap-2">
+            <span
+              className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-700 cursor-pointer"
+              onClick={() => {
+                if (currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student'))) {
+                  if (currentUser.role === 'teacher') {
+                    navigate('/teacher/dashboard');
+                  } else if (currentUser.role === 'student') {
+                    navigate('/student/dashboard');
+                  }
+                } else {
+                  navigate('/');
+                }
+              }}
+            >
+              Examily
+            </span>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  if ((isTeacherDash || isStudentDash) && !isAuthPage) {
+    // Render Examily logo left, dashboard tabs right
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              <span
+                className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-700 cursor-pointer"
+                onClick={() => {
+                  if (currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student'))) {
+                    if (currentUser.role === 'teacher') {
+                      navigate('/teacher/dashboard');
+                    } else if (currentUser.role === 'student') {
+                      navigate('/student/dashboard');
+                    }
+                  } else {
+                    navigate('/');
+                  }
+                }}
+              >
+                Examily
+              </span>
+            </div>
+          </div>
+          <div id="dashboard-tabs-placeholder" className="flex items-center justify-end flex-1"></div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -46,32 +111,30 @@ export default function Header() {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             )}
-            <Link to="/" className="flex items-center gap-2">
-              <span className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-700">
-                Examily
-              </span>
-            </Link>
-          </div>
-          {isLanding && (
-            currentUser ? (
-              <Button
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold"
+            <div className="flex items-center gap-2">
+              <span
+                className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-lime-700 cursor-pointer"
                 onClick={() => {
-                  setCurrentUser(null);
-                  setUser(null);
-                  navigate('/');
+                  if (currentUser && currentUser.role === 'teacher') {
+                    navigate('/teacher/dashboard');
+                  } else if (currentUser && currentUser.role === 'student') {
+                    navigate('/student/dashboard');
+                  } else {
+                    navigate('/');
+                  }
                 }}
               >
-                Log Out
-              </Button>
-            ) : (
-              <Button
-                className="bg-lime-600 hover:bg-lime-700 text-white px-6 py-2 rounded-md text-sm font-semibold"
-                onClick={() => navigate('/login')}
-              >
-                Log In
-              </Button>
-            )
+                Examily
+              </span>
+            </div>
+          </div>
+          {isLanding && (
+            <Button
+              className="bg-lime-600 hover:bg-lime-700 text-white px-6 py-2 rounded-md text-sm font-semibold"
+              onClick={() => navigate('/login')}
+            >
+              Log In
+            </Button>
           )}
           {/* Hamburger menu only on teacher/student pages */}
           {currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && (
@@ -96,12 +159,21 @@ export default function Header() {
                   <Link to="/student/profile" onClick={() => setIsMenuOpen(false)} className="text-base font-medium hover:text-lime-700 transition-colors">Profile</Link>
                 </>
               )}
+              {currentUser ? (
+                <Button variant="ghost" onClick={handleLogout} className="justify-start p-0">
+                  Logout
+                </Button>
+              ) : (
+                <Button variant="ghost" onClick={() => { setIsMenuOpen(false); navigate('/login'); }} className="justify-start p-0">
+                  Log In
+                </Button>
+              )}
             </nav>
           </div>
         )}
 
         {/* Desktop navigation on teacher/student pages: Dashboard, Old Exams, My Profile, Log Out */}
-        {currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && (
+        {currentUser && (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/student')) && !isAuthPage && (
           <div className="hidden md:flex items-center gap-4">
             <Button
               className={`px-6 py-2 rounded-md text-sm font-semibold ${location.pathname === (currentUser.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard') ? 'bg-lime-600 hover:bg-lime-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}
@@ -139,12 +211,21 @@ export default function Header() {
             >
               My Profile
             </Button>
-            <Button
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold"
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button>
+            {currentUser ? (
+              <Button
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold"
+                onClick={handleLogout}
+              >
+                Log Out
+              </Button>
+            ) : (
+              <Button
+                className="bg-lime-600 hover:bg-lime-700 text-white px-6 py-2 rounded-md text-sm font-semibold"
+                onClick={() => navigate('/login')}
+              >
+                Log In
+              </Button>
+            )}
           </div>
         )}
 
@@ -158,16 +239,19 @@ export default function Header() {
                 Create New Exam
               </Button>
             )}
-            {currentUser && (
+            {currentUser ? (
               <Button
                 className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold"
-                onClick={() => {
-                  setCurrentUser(null);
-                  setUser(null);
-                  navigate('/login');
-                }}
+                onClick={handleLogout}
               >
                 Logout
+              </Button>
+            ) : (
+              <Button
+                className="bg-lime-600 hover:bg-lime-700 text-white px-6 py-2 rounded-md text-sm font-semibold"
+                onClick={() => navigate('/login')}
+              >
+                Log In
               </Button>
             )}
           </div>
@@ -272,7 +356,11 @@ export default function Header() {
                         Logout
                       </Button>
                     </>
-                  ) : null}
+                  ) : (
+                    <Button variant="ghost" onClick={() => { setIsMenuOpen(false); navigate('/login'); }} className="justify-start p-0">
+                      Log In
+                    </Button>
+                  )}
                 </nav>
               </div>
             )}

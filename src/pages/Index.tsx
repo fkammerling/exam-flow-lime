@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/components/layout/Layout';
 import { BookOpen, UserCog, Clock, BarChart2 } from 'lucide-react';
 
@@ -18,41 +17,33 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <Card className="card-hover">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-lime-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <UserCog className="h-8 w-8 text-lime-600" />
-              </div>
-              <CardTitle className="text-2xl">Teacher</CardTitle>
-              <CardDescription>Create and manage exams</CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="mb-6 text-muted-foreground">
-                Create, edit, and analyze exams. View student performance and track progress.
-              </p>
-              <Button asChild className="w-full bg-lime-600 hover:bg-lime-700">
-                <Link to="/register">Get Started</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+            <div className="w-16 h-16 bg-lime-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <UserCog className="h-8 w-8 text-lime-600" />
+            </div>
+            <h2 className="text-2xl">Teacher</h2>
+            <p className="text-muted-foreground text-center">Create and manage exams</p>
+            <p className="mb-6 text-muted-foreground">
+              Create, edit, and analyze exams. View student performance and track progress.
+            </p>
+            <Button asChild className="w-full bg-lime-600 hover:bg-lime-700">
+              <Link to="/register">Get Started</Link>
+            </Button>
+          </div>
 
-          <Card className="card-hover">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-lime-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="h-8 w-8 text-lime-600" />
-              </div>
-              <CardTitle className="text-2xl">Student</CardTitle>
-              <CardDescription>Take exams and view results</CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="mb-6 text-muted-foreground">
-                Access your assigned exams using course codes. Take exams and review your results.
-              </p>
-              <Button asChild className="w-full bg-lime-600 hover:bg-lime-700">
-                <Link to="/register">Get Started</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-lg p-6 shadow-sm border flex flex-col items-center">
+            <div className="w-16 h-16 bg-lime-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="h-8 w-8 text-lime-600" />
+            </div>
+            <h2 className="text-2xl">Student</h2>
+            <p className="text-muted-foreground text-center">Take exams and view results</p>
+            <p className="mb-6 text-muted-foreground">
+              Access your assigned exams using course codes. Take exams and review your results.
+            </p>
+            <Button asChild className="w-full bg-lime-600 hover:bg-lime-700">
+              <Link to="/register">Get Started</Link>
+            </Button>
+          </div>
         </div>
 
         <div className="mt-16 max-w-4xl mx-auto">
